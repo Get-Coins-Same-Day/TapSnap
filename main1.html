@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Followers Button</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      min-width: 100vw;
+      box-sizing: border-box;
+      font-family: 'Pacifico', serif;
+      background-color: #FBF8F1;
+      background-image: url('bg2.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .headline {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 44px;
+      text-align: center;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 14px #0008, 5px 4px 0 #000000;
+      user-select: none;
+      margin-top: 30px;
+      line-height: 1.24;
+      max-width: 90vw;
+      padding: 0 16px;
+    }
+    .centered-content {
+      flex: 1;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .circle-btn {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: #fffc00;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 7px 15px -1px #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 60px;
+      transition: transform 0.12s;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .circle-btn:active {
+      transform: scale(0.94);
+    }
+    .circle-btn .gem-img {
+      width: 170px;
+      height: 170px;
+      pointer-events: none;
+      user-select: none;
+      display: block;
+    }
+    .followers-counter-label {
+      margin-bottom: 2px;
+      font-size: 19px;
+      color: #fff;
+      text-shadow: 0 2px 10px #0006;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-align: center;
+      user-select: none;
+    }
+    .likes-counter {
+      margin-top: 0;
+      font-size: 29px;
+      color: #6d6d6d;
+      background: #fff;
+      padding: 9px 35px;
+      border-radius: 22px;
+      box-shadow: 0 2px 10px 0 #eee;
+      user-select: none;
+      font-family: 'Pacifico', serif;
+      min-width: 120px;
+      text-align: center;
+    }
+    /* Particle images */
+    .particle-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      will-change: transform, opacity;
+      pointer-events: none;
+      z-index: 10;
+      width: 36px;
+      height: 36px;
+      transition: none;
+      user-select: none;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+      animation: fly-away 0.85s cubic-bezier(.1,.75,.45,1) forwards;
+    }
+    @keyframes fly-away {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+      }
+      8% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        /* fly by CSS vars */
+        transform:
+          translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, 0px)))
+          scale(0.7) rotate(var(--r, 80deg));
+      }
+    }
+    @media (max-width: 600px) {
+      .circle-btn { width: 250px; height: 250px; }
+      .circle-btn .gem-img { width: 130px; height: 130px; }
+      .likes-counter { font-size: 31px; padding: 7px 18px; min-width: 80px;}
+      .headline { font-size: 1.8rem; }
+      .followers-counter-label { font-size: 20px;}
+      .particle-img { width: 50px; height: 50px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="headline">Get Snapscore!</div>
+  <div class="centered-content">
+    <button class="circle-btn" id="getFollowersBtn">
+      <!-- Вот тут вставлена картинка гемов! -->
+      <img class="gem-img" src="Gem.png" alt="Gems">
+    </button>
+    <div class="followers-counter-label">Snapscore
+    </div>
+    <div class="likes-counter" id="likesCounter">0</div>
+  </div>
+  <script>
+    // Примеры стикеров (можно добавить свои)
+    const urls = [
+      "gemgem.png",
+      "gemgem.png",
+      "gemgem.png",
+      "gemgem.png",
+      "gemgem.png"
+      
+    ];
+    function randomIntBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function animateImages({ total, parent }) {
+      for (let i = 0; i < total; i++) {
+        const img = document.createElement('img');
+        img.src = urls[randomIntBetween(0, urls.length - 1)];
+        img.className = "particle-img";
+        // Во все стороны!
+        const x = randomIntBetween(-180, 180);   // Лево-право
+        const y = randomIntBetween(-180, 180);   // Вверх-вниз
+        const r = randomIntBetween(-540, 540);   // Кручение
+        img.style.setProperty('--x', `${x}px`);
+        img.style.setProperty('--y', `${y}px`);
+        img.style.setProperty('--r', `${r}deg`);
+        parent.appendChild(img);
+        setTimeout(() => {
+          if (parent.contains(img)) parent.removeChild(img);
+        }, 900);
+      }
+    }
+
+    let followers = 0;
+    const likesCounter = document.getElementById('likesCounter');
+    const btn = document.getElementById('getFollowersBtn');
+
+    btn.addEventListener('click', function(e) {
+      followers += 100;
+      likesCounter.textContent = `${followers}`;
+      animateImages({ total: 16, parent: btn });
+    });
+
+    btn.addEventListener("touchstart", () => {}, false);
+  </script>
+</body>
+</html>
